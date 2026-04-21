@@ -1,4 +1,4 @@
-// data.js - Banco de Dados do Interpreta +
+
 const appData = {
     secoes: [
         {
