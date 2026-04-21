@@ -1,7 +1,6 @@
-// script.js - Lógica Principal (Home e Login)
+
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. SELEÇÃO DE ELEMENTOS ---
     const profilePicInput = document.getElementById('profilePicInput');
     const uploadPreview = document.getElementById('uploadPreview');
     const appAvatar = document.getElementById('appAvatar');
@@ -19,22 +18,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginThemeIcon = document.getElementById('loginThemeIcon');
     const cardsContainer = document.getElementById('cardsContainer');
 
-    // --- LÓGICA DE UPLOAD DE FOTO ---
     if (profilePicInput) {
         profilePicInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    tempPicData = event.target.result; // O código da imagem
+                    tempPicData = event.target.result; 
                     uploadPreview.innerHTML = `<img src="${tempPicData}" alt="Sua Foto">`;
                 };
-                reader.readAsDataURL(file); // Transforma em texto para o localStorage aceitar
+                reader.readAsDataURL(file); 
             }
         });
     }
 
-    // --- 2. LÓGICA DO TEMA (UNIFICADA) ---
+    
     function applyTheme(theme) {
         const isDark = theme === 'dark';
         if (isDark) {
@@ -59,61 +57,60 @@ document.addEventListener('DOMContentLoaded', () => {
     if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleThemeAction);
     if (loginThemeToggleBtn) loginThemeToggleBtn.addEventListener('click', toggleThemeAction);
 
-    // Aplica o tema salvo logo no início
+
     const savedTheme = localStorage.getItem('interpretaTheme') || 'light';
     applyTheme(savedTheme);
 
 
-    // --- 3. SISTEMA DE LOGIN ---
     function checkLogin() {
         const user = localStorage.getItem('interpretaUser');
         if (user) {
-            // Se o usuário existe, mostra o App e esconde o Login
+           
             displayUsername.textContent = `Olá, ${user}`;
-            // Mostra a foto no painel se existir
+   
             const userPic = localStorage.getItem('interpretaUserPic');
             if (userPic && appAvatar) {
                 appAvatar.innerHTML = `<img src="${userPic}" alt="Foto de Perfil">`;
             } else if (appAvatar) {
                 appAvatar.innerHTML = `<span class="material-icons-round">face</span>`;
             }
-            loginScreen.classList.add('hidden'); // Garante que some
-            loginScreen.style.display = 'none';  // Força o sumiço
+            loginScreen.classList.add('hidden');
+            loginScreen.style.display = 'none';  
             mainApp.classList.remove('hidden');
-            loadCards(); // Gera os módulos na tela
+            loadCards(); 
         } else {
-            // Se não existe, mostra o Login e esconde o App
+         
             loginScreen.classList.remove('hidden');
             loginScreen.style.display = 'flex';
             mainApp.classList.add('hidden');
         }
     }
 
-    // Evento do botão "Entrar no App"
+    
     enterAppBtn.addEventListener('click', () => {
         const name = usernameInput.value.trim();
         if (name !== "") {
             localStorage.setItem('interpretaUser', name);
-            // Salva a foto no banco de dados do navegador, se tiver escolhido
+            
             if (tempPicData) {
                 localStorage.setItem('interpretaUserPic', tempPicData);
             }
-            // Inicia progresso zerado se não existir
+          
             if(!localStorage.getItem('interpretaProgress')) {
                 localStorage.setItem('interpretaProgress', JSON.stringify({ s1: 0, s2: 0 }));
             }
-            checkLogin(); // Atualiza a tela
+            checkLogin(); 
         } else {
             alert("Por favor, digite seu nome para começar a jornada!");
         }
     });
 
-    // Evento de Sair (Logout)
+   
     logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('interpretaUser');
         usernameInput.value = '';
         
-        // Limpando a foto de perfil ao sair
+       
         localStorage.removeItem('interpretaUserPic');
         tempPicData = null;
         if (uploadPreview) {
@@ -122,10 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         checkLogin();
     });
-
-
-
-    // --- 4. GERAÇÃO DOS CARDS (MÓDULOS) ---
     function loadCards() {
         if (!cardsContainer) return;
         cardsContainer.innerHTML = ''; 
@@ -159,11 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Inicializa verificando se já está logado
     checkLogin();
 });
 
-// Função Global de redirecionamento (fora do DOMContentLoaded para o onclick funcionar)
 window.abrirSecao = function(idSecao) {
     window.location.href = `quiz.html?secao=${idSecao}`;
 };
